@@ -2,7 +2,7 @@
 
 XamarinFormsを理解するためのサンプルです。（自分用）
 
-## Sample_DependencyService
+# Sample_DependencyService
 
 androidのバッテリー残量を表示するアプリ。 DependencyServiceの使い方。 
   
@@ -14,15 +14,15 @@ androidのバッテリー残量を表示するアプリ。 DependencyServiceの�
 2. Android部でインターフェースの実態を実装
 3. DependencyServiceクラスとインターフェースを紐づけして、共通部からDependencyService.Get<>でインターフェースを実行、バッテリー残量を取得
 
-## sample_PageTransition   
+# sample_PageTransition   
 
 ページ遷移のサンプル。NavigationPageの使い方。
    
 ### MainPage登録
 
-app.csで   
+&emsp;app.csで   
 ```
-MainPage = new NavigationPage(new MainPage());
+   MainPage = new NavigationPage(new MainPage());
 ```
 
 ### Page遷移
@@ -46,6 +46,58 @@ MainPage = new NavigationPage(new MainPage());
             //最初のページに戻る
             await Navigation.PopToRootAsync();
         }
+```
+
+
+# Sample_PrismPage
+
+PrismでPage遷移するサンプル。
+
+### Page遷移  
+```
+//Page1へ
+navigationService.NavigateAsync("Page1") 
+
+//前に戻る
+navigationService.GoBackAsync()
+
+//最初に戻る
+navigationService.GoBackToRootAsync()
+```
+### ReactiveProtertyでボタンに登録
+```
+public class MainPageViewModel : ViewModelBase, INotifyPropertyChanged, INavigationAware
+{
+    //Asyncはボタンの二度押し防止
+    public AsyncReactiveCommand NextPageCommand { get; set; } = new AsyncReactiveCommand();
+
+    public MainPageViewModel(INavigationService navigationService) : base(navigationService)
+        {
+        //ボタンを押したときの処理登録
+        NextPageCommand.Subscribe(async _ => await navigationService.NavigateAsync("Page1"));
+    }
+}
+```
+
+
+
+
+### Page遷移時イベント  
+&emsp;&emsp;PageのOpen時：OnNavigatedToイベント  
+&emsp;&emsp;PageのClose時：OnNavigatedFromイベント
+
+```
+public class Page2ViewModel : BindableBase, INavigationAware
+{
+
+    public void OnNavigatedFrom(INavigationParameters parameters)
+    {
+    }
+
+    public void OnNavigatedTo(INavigationParameters parameters)
+    {
+    }
+}
 ```
 
 
